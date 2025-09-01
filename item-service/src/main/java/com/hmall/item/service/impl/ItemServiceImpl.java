@@ -6,7 +6,7 @@ import com.hmall.common.utils.BeanUtils;
 import com.hmall.domain.dto.ItemDTO;
 import com.hmall.domain.dto.OrderDetailDTO;
 import com.hmall.domain.po.Item;
-import com.hmall.mapper.ItemMapper;
+import com.hmall.item.mapper.ItemMapper;
 import com.hmall.service.IItemService;
 import org.springframework.stereotype.Service;
 

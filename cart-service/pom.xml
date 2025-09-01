@@ -9,14 +9,11 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>item-service</artifactId>
+    <artifactId>cart-service</artifactId>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <!-- 可以在这里统一定义依赖版本（可选） -->
-        <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
-        <mysql.version>8.0.33</mysql.version>
     </properties>
 
     <dependencies>
@@ -35,19 +32,16 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.30</version> <!-- 添加版本号 -->
         </dependency>
         <!--mybatis-->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.4.3</version> <!-- 添加版本号 -->
         </dependency>
         <!--单元测试-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.heima</groupId>
@@ -56,7 +50,6 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
-
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
