@@ -6,9 +6,9 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
-@ApiModel(description = "商品分页查询条件")
+@EqualsAndHashCode(callSuper = true) // 自动生成equals()和hascode()方法,参数表示如果继承了父类,则在计算时也会考虑父类的字段
+@Data // 自动生成构造方法
+@ApiModel(description = "商品分页查询条件") // swagger文档描述
 public class ItemPageQuery extends PageQuery {
     @ApiModelProperty("搜索关键字")
     private String key;

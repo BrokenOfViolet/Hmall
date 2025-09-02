@@ -1,21 +1,31 @@
 package com.hmall.cart.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hmall.api.client.ItemClient;
+import com.hmall.api.dto.ItemDTO;
 import com.hmall.common.exception.BizIllegalException;
 import com.hmall.common.utils.BeanUtils;
 import com.hmall.common.utils.CollUtils;
 import com.hmall.common.utils.UserContext;
 import com.hmall.domain.dto.CartFormDTO;
-import com.hmall.domain.dto.ItemDTO;
 import com.hmall.domain.po.Cart;
 import com.hmall.domain.vo.CartVO;
 import com.hmall.cart.mapper.CartMapper;
 import com.hmall.service.ICartService;
 import com.hmall.service.IItemService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Collection;
 import java.util.List;
@@ -33,10 +43,10 @@ import java.util.stream.Collectors;
  * @since 2023-05-05
  */
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor //它会自动生成一个 带有所有 final 字段的构造函数，Spring 会通过构造函数注入依赖。
 public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements ICartService {
 
-//    private final IItemService itemService;
+    private final ItemClient itemClient;
 
     @Override
     public void addItem2Cart(CartFormDTO cartFormDTO) {
@@ -80,25 +90,26 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
     }
 
     private void handleCartItems(List<CartVO> vos) {
-//        // 1.获取商品id
-//        Set<Long> itemIds = vos.stream().map(CartVO::getItemId).collect(Collectors.toSet());
-//        // 2.查询商品
-//        List<ItemDTO> items = itemService.queryItemByIds(itemIds);
-//        if (CollUtils.isEmpty(items)) {
-//            return;
-//        }
-//        // 3.转为 id 到 item的map
-//        Map<Long, ItemDTO> itemMap = items.stream().collect(Collectors.toMap(ItemDTO::getId, Function.identity()));
-//        // 4.写入vo
-//        for (CartVO v : vos) {
-//            ItemDTO item = itemMap.get(v.getItemId());
-//            if (item == null) {
-//                continue;
-//            }
-//            v.setNewPrice(item.getPrice());
-//            v.setStatus(item.getStatus());
-//            v.setStock(item.getStock());
-//        }
+        // TODO 1.获取商品id
+        Set<Long> itemIds = vos.stream().map(CartVO::getItemId).collect(Collectors.toSet());
+        // 2.查询商品
+        List<ItemDTO> items = itemClient.queryItemByIds(itemIds);
+        if (CollUtils.isEmpty(items)) {
+            return;
+        }
+        // 3.转为 id 到 item的map
+        // Function.identity() 原样返回输入的值,在这个例子里就是item, collect()遍历数据
+        Map<Long, ItemDTO> itemMap = items.stream().collect(Collectors.toMap(ItemDTO::getId, Function.identity()));
+        // 4.写入vo
+        for (CartVO v : vos) {
+            ItemDTO item = itemMap.get(v.getItemId());
+            if (item == null) {
+                continue;
+            }
+            v.setNewPrice(item.getPrice());
+            v.setStatus(item.getStatus());
+            v.setStock(item.getStock());
+        }
     }
 
     @Override
