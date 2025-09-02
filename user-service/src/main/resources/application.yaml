@@ -7,7 +7,7 @@ spring:
     nacos:
       server-addr: 127.0.0.1:8848
   profiles:
-    active: local
+    active: dev
   datasource:
     url: jdbc:mysql://${hm.db.host}:3307/hm-user?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.cj.jdbc.Driver
