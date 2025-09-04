@@ -18,6 +18,8 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+import static io.prometheus.client.Counter.build;
+
 @Component
 @RequiredArgsConstructor
 @EnableConfigurationProperties(AuthProperties.class)
@@ -56,9 +58,12 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         }
 
         // TODO 5.如果有效，传递用户信息
-        System.out.println("userId = " + userId);
+        String userInfo = userId.toString();
+        ServerWebExchange swe = exchange.mutate()
+                .request(b -> b.header("userInfo", userInfo))
+                .build();
         // 6.放行
-        return chain.filter(exchange);
+        return chain.filter(swe);
     }
 
     private boolean isExclude(String antPath) {
