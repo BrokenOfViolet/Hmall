@@ -9,6 +9,7 @@ public class RemoteCallConfig {
 
     @Bean
     public RestTemplate restTemplate() {
+        // RestTemplate 是 同步调用，大量并发请求可能阻塞线程
         return new RestTemplate();
     }
 }

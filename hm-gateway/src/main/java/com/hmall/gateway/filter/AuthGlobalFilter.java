@@ -60,7 +60,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         // TODO 5.如果有效，传递用户信息
         String userInfo = userId.toString();
         ServerWebExchange swe = exchange.mutate()
-                .request(b -> b.header("userInfo", userInfo))
+                .request(b -> b.header("user-info", userInfo))
                 .build();
         // 6.放行
         return chain.filter(swe);
